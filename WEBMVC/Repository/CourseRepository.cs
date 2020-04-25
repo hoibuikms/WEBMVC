@@ -11,10 +11,12 @@ namespace WEBMVC.Repository
 	public class CourseRepository : ICourse
 	{
 		private SchoolDbContext context;
+		
 		public CourseRepository(SchoolDbContext _context)
 		{
 			context = _context;
 		}
+		
 		public IEnumerable<Course> GetCourses => context.Courses;
 
 		public void Add(Course _Course)
