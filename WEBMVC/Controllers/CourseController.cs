@@ -20,6 +20,7 @@ namespace WEBMVC.Controllers
 		{
 			return View(_Course.GetCourses);
 		}
+
 		[HttpGet]
 		public IActionResult Create()
 		{
