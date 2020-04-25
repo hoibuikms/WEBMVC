@@ -14,5 +14,5 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    projects: 'WEBMVCUnitTest/*WEBMVCUnitTest*.csproj'
+    projects: 'WEBMVCUnitTest/WEBMVCUnitTest.csproj'
 	
