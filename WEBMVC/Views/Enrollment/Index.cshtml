@@ -1,0 +1,67 @@
+﻿@model IEnumerable<WEBMVC.Models.Enrollment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Students)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Grade)
+            </th>
+            <th>
+                <a asp-action="Create" class="btn btn-outline-success"><i class="far fa-plus-square"></i>  Course</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Students.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Courses.CourseName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Grade)
+            </td>
+            <td>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <a asp-action="Edit" asp-route-id="@item.EnrollmentId"><i class='fas fa-pencil-alt' style='color:black'></i></a>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <a asp-action="Details" asp-route-id="@item.EnrollmentId"><i class='fas fa-file-alt' style='color:black'></i></a>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <a asp-action="Delete" asp-route-id="@item.EnrollmentId">
+                            <i class="far fa-trash-alt" style='color:black'></i>
+                        </a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
