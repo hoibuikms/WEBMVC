@@ -27,7 +27,7 @@ namespace WEBMVC
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
-			services.AddDbContext<SchoolDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+			services.AddDbContext<SchoolDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Connection")));
 			services.AddMvc();
 			services.AddTransient<IStudent, StudentRepository>();
 			services.AddTransient<ICourse, CourseRepository>();
