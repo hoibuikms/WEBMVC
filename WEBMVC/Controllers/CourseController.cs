@@ -29,6 +29,7 @@ namespace WEBMVC.Controllers
 
 			return View(model);
 		}
+		
 		[HttpPost]
 		public IActionResult Create(Course model)
 		{
@@ -39,6 +40,7 @@ namespace WEBMVC.Controllers
 			}
 			return View(model);
 		}
+		
 		[HttpGet]
 		public IActionResult Delete(int? Id)
 		{
