@@ -10,52 +10,48 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'WEBMVC.sln'
+  solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-stages:
-- stage: CI
-  displayName: CI Stage
-  jobs:
-  - deployment: build
-    displayName: Build
-    environment: Build
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: echo This is a BUILD job
-            displayName: 'Build project'
-            
-          - task: NuGetToolInstaller@1
-          - task: NuGetCommand@2
-            inputs:
-              restoreSolution: '$(solution)'
+steps:
+- task: NuGetToolInstaller@1
 
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
 
-          - task: VSTest@2
-            inputs:
-              platform: '$(buildPlatform)'
-              configuration: '$(buildConfiguration)'
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-          - task: DotNetCoreCLI@2
-            inputs:
-             command: 'test'
-             projects: 'WEBMVCUnitTest/WEBMVCUnitTest.csproj'
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-- stage: CD
-  displayName: CD Stage
-  jobs:
-  - deployment: deploy
-    displayName: Deploy
-    environment: Deploy
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: echo This is a BUILD job
-            displayName: 'Build project'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'WEBMVCUnitTest/WEBMVCUnitTest.csproj'
 
-          - task: PublishBuildArtifacts@1
-            displayName: 'publish artifacts'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: 'WEBMVC/WEBMVC.csproj'
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+
+- task: PublishCodeCoverageResults@1
+  inputs:
+    summaryFileLocation: $(Build.SourcesDirectory)/coverage/Cobertura/Cobertura.xml
+    reportDirectory: $(Build.SourcesDirectory)/coverage/Cobertura
+    codecoverageTool: cobertura
+
+- task: PublishBuildArtifacts@1
+  displayName: 'publish artifacts'
